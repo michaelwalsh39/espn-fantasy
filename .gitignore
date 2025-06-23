@@ -1,0 +1,17 @@
+# Maven build output
+/target/
+
+# IntelliJ or Eclipse config (optional)
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+
+# Sensitive files
+config.properties
+wallet/
+
+# Logs or temp files
+*.log
+*.tmp
