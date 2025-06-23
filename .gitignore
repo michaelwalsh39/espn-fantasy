@@ -1,17 +1,39 @@
 # Maven build output
 /target/
-
-# IntelliJ or Eclipse config (optional)
-*.iml
-.idea/
-.project
-.classpath
-.settings/
+/bin/
+/build/
 
 # Sensitive files
 config.properties
 wallet/
 
+# IntelliJ or Eclipse config (optional)
+*.iml
+.idea/
+*.classpath
+*.project
+*.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
 # Logs or temp files
 *.log
 *.tmp
+
+# Environment and secrets
+.env
+*.key
+*.pem
+*.jks
+*.p12
+*.keystore
+
+# Dependency directories
+/.gradle/
+/.mvn/
+node_modules/
+
+# Misc
+*.swp
