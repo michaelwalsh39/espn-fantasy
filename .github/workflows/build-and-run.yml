@@ -44,10 +44,17 @@ jobs:
             esac
           done
 
-      - name: Restore Oracle wallet (optional)
+      - name: Restore Oracle wallet
         run: |
           echo "${{ secrets.ORACLE_WALLET_BASE64 }}" | base64 -d > wallet.zip
           unzip -q wallet.zip -d wallet
+
+      - name: Debug wallet contents
+        run: |
+          echo "Wallet directory contents:"
+          ls -l wallet
+          echo "Contents of tnsnames.ora:"
+          cat wallet/tnsnames.ora
 
       - name: Create config.properties
         run: |
