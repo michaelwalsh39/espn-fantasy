@@ -1,0 +1,61 @@
+name: Build and Run Java App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download Oracle JARs from GitHub Release
+        run: |
+          mkdir -p jars
+          gh release download --pattern "*.jar" --dir jars
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Oracle JARs to local Maven repo
+        run: |
+          for jar in jars/*.jar; do
+            base=$(basename "$jar")
+            case $base in
+              ojdbc11*)
+                mvn install:install-file -Dfile="$jar" -DgroupId=com.oracle.database.jdbc -DartifactId=ojdbc11 -Dversion=21.9.0.0 -Dpackaging=jar
+                ;;
+              oraclepki*)
+                mvn install:install-file -Dfile="$jar" -DgroupId=com.oracle.ojdbc -DartifactId=oraclepki -Dversion=23.3.0.0 -Dpackaging=jar
+                ;;
+              osdt_cert*)
+                mvn install:install-file -Dfile="$jar" -DgroupId=com.oracle.ojdbc -DartifactId=osdt_cert -Dversion=23.3.0.0 -Dpackaging=jar
+                ;;
+              osdt_core*)
+                mvn install:install-file -Dfile="$jar" -DgroupId=com.oracle.ojdbc -DartifactId=osdt_core -Dversion=23.3.0.0 -Dpackaging=jar
+                ;;
+            esac
+          done
+
+      - name: Restore Oracle wallet (optional)
+        if: ${{ secrets.ORACLE_WALLET_BASE64 != '' }}
+        run: |
+          echo "${{ secrets.ORACLE_WALLET_BASE64 }}" | base64 -d > wallet.zip
+          unzip -q wallet.zip -d wallet
+
+      - name: Create config.properties
+        run: |
+          echo "${{ secrets.CONFIG_PROPERTIES }}" > config.properties
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Run the application
+        run: mvn exec:java
