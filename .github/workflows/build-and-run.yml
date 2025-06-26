@@ -47,7 +47,17 @@ jobs:
       - name: Restore Oracle wallet
         run: |
           echo "${{ secrets.ORACLE_WALLET_BASE64 }}" | base64 -d > wallet.zip
-          unzip -q wallet.zip -d wallet
+
+      - name: Check wallet.zip
+        run: |
+          ls -l wallet.zip
+          file wallet.zip
+
+      - name: Unzip wallet.zip
+        run: |
+          unzip -v wallet.zip
+          unzip wallet.zip -d wallet
+          ls -la wallet
 
       - name: Debug wallet contents
         run: |
