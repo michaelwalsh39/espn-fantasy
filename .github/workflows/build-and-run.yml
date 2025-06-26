@@ -11,6 +11,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -47,24 +55,8 @@ jobs:
       - name: Restore Oracle wallet
         run: |
           echo "${{ secrets.ORACLE_WALLET_BASE64 }}" | base64 -d > wallet.zip
-
-      - name: Check wallet.zip
-        run: |
-          ls -l wallet.zip
-          file wallet.zip
-
-      - name: Unzip wallet.zip
-        run: |
           unzip -v wallet.zip
           unzip wallet.zip -d wallet
-          ls -la wallet
-
-      - name: Debug wallet contents
-        run: |
-          echo "Wallet directory contents:"
-          ls -l wallet
-          echo "Contents of tnsnames.ora:"
-          cat wallet/tnsnames.ora
 
       - name: Create config.properties
         run: |
@@ -76,4 +68,4 @@ jobs:
       - name: Run the application
         env:
           TNS_ADMIN: ${{ github.workspace }}/wallet
-        run: mvn exec:java
+        run: mvn exec:java -Dexec.cleanupDaemonThreads=false
