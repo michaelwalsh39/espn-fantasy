@@ -13,7 +13,7 @@ public class MatchupScoringPlayerDao {
 
     public void upsertDailyStats(Connection conn, List<MatchupScoringPlayer> scoring, int leagueId) throws SQLException {
         String deleteSQL = "DELETE FROM matchup_scoring_period_player WHERE matchup_id = ? AND scoring_period_id = ? AND league_id = ? AND agg_type = ?";
-        String insertSQL = "INSERT INTO matchup_scoring_period_player (league_id, matchup_id, team_id, player_id, scoring_period_id, stat_id, agg_type, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT INTO matchup_scoring_period_player (league_id, matchup_id, team_id, player_id, scoring_period_id, stat_id, agg_type, points, lineup_slot_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSQL);
              PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
@@ -54,6 +54,7 @@ public class MatchupScoringPlayerDao {
                 }
                 insertStmt.setString(7, score.getAggType());
                 insertStmt.setDouble(8, score.getPoints());
+                insertStmt.setInt(9, score.getLineupSlotId());
                 insertStmt.addBatch();
             }
             insertStmt.executeBatch();
@@ -68,7 +69,7 @@ public class MatchupScoringPlayerDao {
             columnList = "league_id, matchup_id, team_id, player_id, stat_id";
         }
         else if (outputAggType.equals("daily")) {
-            columnList = "league_id, matchup_id, scoring_period_id, team_id, player_id";
+            columnList = "league_id, matchup_id, scoring_period_id, team_id, player_id, lineup_slot_id";
         }
         else if (outputAggType.equals("weekly")) {
             columnList = "league_id, matchup_id, team_id, player_id";

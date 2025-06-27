@@ -8,8 +8,9 @@ public class MatchupScoringPlayer {
     private int teamId;
     private int matchupId;
     private String aggType;
+    private Integer lineupSlotId;
 
-    public MatchupScoringPlayer(int playerId, int statId, double points, int scoringPeriodId, Integer teamId, int matchupId, String aggType) {
+    public MatchupScoringPlayer(int playerId, int statId, double points, int scoringPeriodId, Integer teamId, int matchupId, String aggType, Integer lineupSlotId) {
         this.playerId = playerId;
         this.statId = statId;
         this.points = points;
@@ -17,6 +18,7 @@ public class MatchupScoringPlayer {
         this.teamId = teamId;
         this.matchupId = matchupId;
         this.aggType = aggType;
+        this.lineupSlotId = lineupSlotId;
     }
 
     public int getPlayerId() {
@@ -73,6 +75,14 @@ public class MatchupScoringPlayer {
 
     public void setAggType(int matchupId) {
         this.matchupId = matchupId;
+    }
+
+    public Integer getLineupSlotId() {
+        return lineupSlotId;
+    }
+
+    public void setLineupSlotId(Integer lineupSlotId) {
+        this.lineupSlotId = lineupSlotId;
     }
 
 }

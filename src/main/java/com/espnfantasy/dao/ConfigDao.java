@@ -30,7 +30,7 @@ public class ConfigDao {
 
     public int loadRecentMatchupPeriodId(int leagueId, Connection conn) throws SQLException {
         String query = "SELECT" +
-                        "  MAX(COALESCE(m.MATCHUP_PERIOD_ID,0)) AS matchup_period_id " +
+                        "  COALESCE(MAX(m.MATCHUP_PERIOD_ID), 1) AS matchup_period_id " +
                         "FROM matchup_scoring_period_player p " +
                         "JOIN matchup m " +
                         "  ON p.matchup_id = m.matchup_id " +
@@ -42,7 +42,15 @@ public class ConfigDao {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     int matchupPeriodId = rs.getInt("matchup_period_id");
-                    return matchupPeriodId - 1; // look back a full week from last load
+
+                    if (matchupPeriodId == 1) { // if it's early in the season, do nothing
+                        ;
+                    }
+                    else {
+                        matchupPeriodId --; // if it's not, look back a full week from last load
+                    }
+                    return matchupPeriodId; 
+
                 } else {
                     throw new IllegalStateException("No recent matchupPeriodId found in the database.");
                 }

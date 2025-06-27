@@ -90,7 +90,8 @@ CREATE TABLE matchup_scoring_period_player (
     points NUMBER,
     agg_type VARCHAR(20),
     added_at TIMESTAMP DEFAULT SYSTIMESTAMP,
-    modified_at TIMESTAMP DEFAULT SYSTIMESTAMP
+    modified_at TIMESTAMP DEFAULT SYSTIMESTAMP,
+    lineup_slot_id INTEGER
 );
 
 CREATE INDEX idx_matchup_scoring_period_player_comp
@@ -149,6 +150,35 @@ CREATE TABLE draft (
     PRIMARY KEY (league_id, season, pick_number_overall)
 );
 
+CREATE TABLE position (
+    sport_id VARCHAR(10) NOT NULL,
+    position_id INTEGER NOT NULL,
+    position_name VARCHAR(25) NULL,
+    added_at TIMESTAMP DEFAULT SYSTIMESTAMP,
+    modified_at TIMESTAMP DEFAULT SYSTIMESTAMP,
+    PRIMARY KEY (sport_id, position_id)
+);
+
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 0, 'C');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 1, '1B');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 2, '2B');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 3, '3B');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 4, 'SS');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 5, 'OF');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 6, '2B/SS');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 7, '1B/3B');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 8, 'LF');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 9, 'CF');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 10, 'RF');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 11, 'DH');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 12, 'UTIL');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 13, 'P');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 14, 'SP');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 15, 'RP');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 16, 'BE');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 17, 'IL');
+INSERT INTO position (sport_id, position_id, position_name) VALUES ('flb', 19, 'IF');
+
 CREATE TABLE stat (
     sport_id VARCHAR(10) NOT NULL,
     stat_id INTEGER NOT NULL,
@@ -158,81 +188,81 @@ CREATE TABLE stat (
     PRIMARY KEY (sport_id, stat_id)
 );
 
-INSERT INTO stat (stat_id, stat_name) VALUES (0, 'AB');
-INSERT INTO stat (stat_id, stat_name) VALUES (1, 'H');
-INSERT INTO stat (stat_id, stat_name) VALUES (2, 'AVG');
-INSERT INTO stat (stat_id, stat_name) VALUES (3, '2B');
-INSERT INTO stat (stat_id, stat_name) VALUES (4, '3B');
-INSERT INTO stat (stat_id, stat_name) VALUES (5, 'HR');
-INSERT INTO stat (stat_id, stat_name) VALUES (6, 'XBH');
-INSERT INTO stat (stat_id, stat_name) VALUES (7, '1B');
-INSERT INTO stat (stat_id, stat_name) VALUES (8, 'TB');
-INSERT INTO stat (stat_id, stat_name) VALUES (9, 'SLG');
-INSERT INTO stat (stat_id, stat_name) VALUES (10, 'B_BB');
-INSERT INTO stat (stat_id, stat_name) VALUES (11, 'B_IBB');
-INSERT INTO stat (stat_id, stat_name) VALUES (12, 'HBP');
-INSERT INTO stat (stat_id, stat_name) VALUES (13, 'SF');
-INSERT INTO stat (stat_id, stat_name) VALUES (14, 'SH');
-INSERT INTO stat (stat_id, stat_name) VALUES (15, 'SAC');
-INSERT INTO stat (stat_id, stat_name) VALUES (16, 'PA');
-INSERT INTO stat (stat_id, stat_name) VALUES (17, 'OBP');
-INSERT INTO stat (stat_id, stat_name) VALUES (18, 'OPS');
-INSERT INTO stat (stat_id, stat_name) VALUES (19, 'RC');
-INSERT INTO stat (stat_id, stat_name) VALUES (20, 'R');
-INSERT INTO stat (stat_id, stat_name) VALUES (21, 'RBI');
-INSERT INTO stat (stat_id, stat_name) VALUES (23, 'SB');
-INSERT INTO stat (stat_id, stat_name) VALUES (24, 'CS');
-INSERT INTO stat (stat_id, stat_name) VALUES (25, 'SB-CS');
-INSERT INTO stat (stat_id, stat_name) VALUES (26, 'GDP');
-INSERT INTO stat (stat_id, stat_name) VALUES (27, 'B_SO');
-INSERT INTO stat (stat_id, stat_name) VALUES (28, 'PS');
-INSERT INTO stat (stat_id, stat_name) VALUES (29, 'PPA');
-INSERT INTO stat (stat_id, stat_name) VALUES (31, 'CYC');
-INSERT INTO stat (stat_id, stat_name) VALUES (32, 'GP');
-INSERT INTO stat (stat_id, stat_name) VALUES (33, 'GS');
-INSERT INTO stat (stat_id, stat_name) VALUES (34, 'OUTS');
-INSERT INTO stat (stat_id, stat_name) VALUES (35, 'TBF');
-INSERT INTO stat (stat_id, stat_name) VALUES (36, 'P');
-INSERT INTO stat (stat_id, stat_name) VALUES (37, 'P_H');
-INSERT INTO stat (stat_id, stat_name) VALUES (38, 'OBA');
-INSERT INTO stat (stat_id, stat_name) VALUES (39, 'P_BB');
-INSERT INTO stat (stat_id, stat_name) VALUES (40, 'P_IBB');
-INSERT INTO stat (stat_id, stat_name) VALUES (41, 'WHIP');
-INSERT INTO stat (stat_id, stat_name) VALUES (42, 'HBP');
-INSERT INTO stat (stat_id, stat_name) VALUES (43, 'OOBP');
-INSERT INTO stat (stat_id, stat_name) VALUES (44, 'P_R');
-INSERT INTO stat (stat_id, stat_name) VALUES (45, 'ER');
-INSERT INTO stat (stat_id, stat_name) VALUES (46, 'P_HR');
-INSERT INTO stat (stat_id, stat_name) VALUES (47, 'ERA');
-INSERT INTO stat (stat_id, stat_name) VALUES (48, 'K');
-INSERT INTO stat (stat_id, stat_name) VALUES (49, 'K/9');
-INSERT INTO stat (stat_id, stat_name) VALUES (50, 'WP');
-INSERT INTO stat (stat_id, stat_name) VALUES (51, 'BLK');
-INSERT INTO stat (stat_id, stat_name) VALUES (52, 'PK');
-INSERT INTO stat (stat_id, stat_name) VALUES (53, 'W');
-INSERT INTO stat (stat_id, stat_name) VALUES (54, 'L');
-INSERT INTO stat (stat_id, stat_name) VALUES (55, 'WPCT');
-INSERT INTO stat (stat_id, stat_name) VALUES (56, 'SVO');
-INSERT INTO stat (stat_id, stat_name) VALUES (57, 'SV');
-INSERT INTO stat (stat_id, stat_name) VALUES (58, 'BLSV');
-INSERT INTO stat (stat_id, stat_name) VALUES (59, 'SV%');
-INSERT INTO stat (stat_id, stat_name) VALUES (60, 'HLD');
-INSERT INTO stat (stat_id, stat_name) VALUES (62, 'CG');
-INSERT INTO stat (stat_id, stat_name) VALUES (63, 'QS');
-INSERT INTO stat (stat_id, stat_name) VALUES (65, 'NH');
-INSERT INTO stat (stat_id, stat_name) VALUES (66, 'PG');
-INSERT INTO stat (stat_id, stat_name) VALUES (67, 'TC');
-INSERT INTO stat (stat_id, stat_name) VALUES (68, 'PO');
-INSERT INTO stat (stat_id, stat_name) VALUES (69, 'A');
-INSERT INTO stat (stat_id, stat_name) VALUES (70, 'OFA');
-INSERT INTO stat (stat_id, stat_name) VALUES (71, 'FPCT');
-INSERT INTO stat (stat_id, stat_name) VALUES (72, 'E');
-INSERT INTO stat (stat_id, stat_name) VALUES (73, 'DP');
-INSERT INTO stat (stat_id, stat_name) VALUES (74, 'B_G_W');
-INSERT INTO stat (stat_id, stat_name) VALUES (75, 'B_G_L');
-INSERT INTO stat (stat_id, stat_name) VALUES (76, 'P_G_W');
-INSERT INTO stat (stat_id, stat_name) VALUES (77, 'P_G_L');
-INSERT INTO stat (stat_id, stat_name) VALUES (81, 'G');
-INSERT INTO stat (stat_id, stat_name) VALUES (82, 'K/BB');
-INSERT INTO stat (stat_id, stat_name) VALUES (83, 'SVHD');
-INSERT INTO stat (stat_id, stat_name) VALUES (99, 'STARTER');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 0, 'AB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 1, 'H');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 2, 'AVG');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 3, '2B');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 4, '3B');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 5, 'HR');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 6, 'XBH');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 7, '1B');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 8, 'TB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 9, 'SLG');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 10, 'B_BB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 11, 'B_IBB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 12, 'HBP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 13, 'SF');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 14, 'SH');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 15, 'SAC');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 16, 'PA');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 17, 'OBP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 18, 'OPS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 19, 'RC');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 20, 'R');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 21, 'RBI');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 23, 'SB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 24, 'CS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 25, 'SB-CS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 26, 'GDP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 27, 'B_SO');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 28, 'PS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 29, 'PPA');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 31, 'CYC');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 32, 'GP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 33, 'GS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 34, 'OUTS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 35, 'TBF');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 36, 'P');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 37, 'P_H');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 38, 'OBA');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 39, 'P_BB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 40, 'P_IBB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 41, 'WHIP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 42, 'HBP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 43, 'OOBP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 44, 'P_R');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 45, 'ER');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 46, 'P_HR');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 47, 'ERA');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 48, 'K');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 49, 'K/9');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 50, 'WP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 51, 'BLK');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 52, 'PK');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 53, 'W');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 54, 'L');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 55, 'WPCT');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 56, 'SVO');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 57, 'SV');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 58, 'BLSV');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 59, 'SV%');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 60, 'HLD');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 62, 'CG');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 63, 'QS');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 65, 'NH');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 66, 'PG');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 67, 'TC');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 68, 'PO');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 69, 'A');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 70, 'OFA');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 71, 'FPCT');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 72, 'E');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 73, 'DP');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 74, 'B_G_W');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 75, 'B_G_L');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 76, 'P_G_W');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 77, 'P_G_L');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 81, 'G');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 82, 'K/BB');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 83, 'SVHD');
+INSERT INTO stat (sport_id, stat_id, stat_name) VALUES ('flb', 99, 'STARTER');

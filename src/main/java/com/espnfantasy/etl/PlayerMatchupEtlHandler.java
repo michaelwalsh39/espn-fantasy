@@ -33,6 +33,7 @@ public class PlayerMatchupEtlHandler implements EtlHandler {
                     if (roster != null && roster.has("entries")) {
                         for (JsonNode entry : roster.get("entries")) {
                             int playerId = entry.get("playerId").asInt();
+                            int lineupSlotId = entry.get("lineupSlotId").asInt();
 
                             JsonNode statsArray = entry
                                 .path("playerPoolEntry")
@@ -52,7 +53,7 @@ public class PlayerMatchupEtlHandler implements EtlHandler {
                                             double points = appliedStats.get(statIdStr).asDouble();
 
                                             MatchupScoringPlayer msp = new MatchupScoringPlayer(
-                                                playerId, statId, points, scoringPeriodId, teamId, matchupId, "stat_daily"
+                                                playerId, statId, points, scoringPeriodId, teamId, matchupId, "stat_daily", lineupSlotId
                                             );
                                             dataStore.addMatchupScoringPlayer(msp);
                                         }
