@@ -24,12 +24,17 @@ public class TeamMatchupEtlHandler implements EtlHandler {
     @Override
     public void handle(JsonNode root, DataStore dataStore, Connection conn) throws SQLException {
        if (root.has("schedule")) {
+
         for (JsonNode matchupNode : root.get("schedule")) {
             int matchupId = matchupNode.path("id").asInt();
             int matchupPeriodId = matchupNode.path("matchupPeriodId").asInt();
 
             JsonNode home = matchupNode.get("home");
             JsonNode away = matchupNode.get("away");
+
+            if (home == null || away == null) {
+                continue; // teams with bye's in the playoffs - skip
+            }
 
             int homeTeamId = home.path("teamId").asInt();
             int awayTeamId = away.path("teamId").asInt();
